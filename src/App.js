@@ -12,10 +12,26 @@ const App = () => {
     }
   };
 
-  const handleSubmit = () => {
-    // код для обработки изображения с ИИ
-    console.log('Обрабатываем изображение с ИИ:', image);
-  };
+ const handleSubmit = async () => {
+  if (!image) return;
+
+  const formData = new FormData();
+  formData.append('file', image);
+
+  try {
+    const response = await fetch('http://localhost:5000/predict', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    alert(`Результат: ${data.class}`); // Показать класс мусора
+
+  } catch (error) {
+    console.error('Ошибка при отправке файла:', error);
+    alert('Ошибка при определении типа мусора.');
+  }
+};
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
